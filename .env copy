@@ -1,0 +1,6 @@
+SMTP_HOST=smtp.gmail.com
+SMTP_USER=your@gmail.com
+SMTP_PASS=passappgmail
+NEXT_PUBLIC_YOUTUBE_API_KEY=KeyYT
+NEXT_PUBLIC_SUPABASE_URL=https://your.supabase.co
+NEXT_PUBLIC_SUPABASE_KEY=Key

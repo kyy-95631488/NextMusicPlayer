@@ -88,7 +88,7 @@ const MusicPlayer = () => {
     setIsDownloading(true);
   
     try {
-      await new Promise((resolve) => setTimeout(resolve, 30000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
   
       setIsDownloading(false);
     } catch (error) {

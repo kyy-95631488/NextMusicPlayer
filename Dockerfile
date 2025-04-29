@@ -1,29 +1,32 @@
 FROM node:20-slim
 
-# Install dependencies
+# Install dependencies: ffmpeg, python3, pip, venv
 RUN apt update && \
     apt install -y ffmpeg python3-venv python3-pip && \
-    python3 -m venv /venv && \
-    /venv/bin/pip install --upgrade pip && \
-    /venv/bin/pip install yt-dlp && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
+# Setup Python venv and install yt-dlp
+RUN python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install yt-dlp
+
+# Add yt-dlp to path
 ENV PATH="/venv/bin:$PATH"
 
-# Set workdir
+# Create app directory
 WORKDIR /app
 
-# Copy package files first to install dependencies (Docker cache optimization)
-COPY package.json pnpm-lock.yaml* ./
-
-# Install pnpm and dependencies
-RUN npm install -g pnpm && pnpm install
-
-# Copy remaining files
+# Copy files
 COPY . .
 
-# Expose port if needed (default for Next.js)
+# Install Node dependencies
+RUN npm install -g pnpm && pnpm install
+
+# Build the Next.js app
+RUN pnpm build
+
+# Use production server
+ENV NODE_ENV=production
 EXPOSE 3000
 
-# Start the dev server
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "start"]

@@ -14,7 +14,7 @@ RUN python3 -m venv /venv && \
 ENV PATH="/venv/bin:$PATH"
 
 # Create app directory
-WORKDIR /app
+WORKDIR /
 
 # Copy files
 COPY . .

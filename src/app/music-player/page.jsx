@@ -227,7 +227,7 @@ const MusicPlayer = () => {
 
                 {currentTrack && !isDownloading ? (
                   <a
-                    href={`/api/download?id=${currentTrack.video_id}&quality=${audioQuality}`}
+                    href={`https://nextmusicplayerapi-production.up.railway.app/api/download?id=${currentTrack.video_id}&quality=${audioQuality}`}
                     download
                     className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-md"
                     onClick={handleDownload}

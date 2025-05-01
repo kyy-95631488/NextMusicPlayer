@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Bars3Icon, XMarkIcon, PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
+import { supabase } from "../../lib/supabase";
 import MenuOverlay from "../../components/navBar/MenuOverlay";
 import Footer from "../../components/footer/Footer";
 import ParticlesComponent from "../../components/particles/particlesreact";
-import { supabase } from "../../lib/supabase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -98,9 +98,9 @@ const Dashboard = () => {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="mt-3 md:mt-0 bg-gradient-to-r from-red-500 to-red-700 text-white py-2 px-5 rounded-lg shadow hover:scale-105 transition"
+                  className="bg-gradient-to-r from-red-500 to-red-700 text-white p-2 rounded-lg shadow hover:scale-105 transition"
                 >
-                  Logout
+                  <PowerIcon className="h-6 w-6" />
                 </button>
               </li>
             </ul>
@@ -140,9 +140,9 @@ const Dashboard = () => {
                   <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4">
                     <button
                       onClick={() => window.location.href = './profile'}
-                      className="bg-slate-800 py-2 px-5 text-sm text-white rounded-md shadow hover:bg-slate-700 transition"
+                      className="bg-slate-800 p-2 text-white rounded-md shadow hover:bg-slate-700 transition"
                     >
-                      Go to Profile
+                      <UserCircleIcon className="h-6 w-6" />
                     </button>
                   </div>
                 </>

@@ -95,11 +95,11 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl text-wrap lg:mr-20 md:mr-20 md:pr-20"
           >
-            Stream your favorite tracks from YouTube, SoundCloud, and more using our advanced player. Powered by YouTube API, YT-DLP, Supabase.
+            Stream your favorite tracks from YouTube, and more using our advanced player. Powered by YouTube API, YT-DLP, Supabase.
           </motion.p>
           <div>
             <a
-              href="https://github.com/your-repo-link"
+              href="https://github.com/kyy-95631488"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -115,7 +115,7 @@ const HeroSection = () => {
               className="px-1 py-1 w-full sm:w-fit rounded-full bg-transparent hover:bg-slate-800 text-white mt-3 bg-gradient-to-br from-primary-500 via-secondary-600 to-secondary-500"
             >
               <a
-                href="/about"
+                href="/"
                 className="block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2"
               >
                 Learn More

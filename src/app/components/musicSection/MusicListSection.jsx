@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import TagPopuler from "./TagPopuler";
 import axios from "axios";
-import { supabase } from "../../lib/supabase"; // Pastikan Anda sudah menginisialisasi Supabase
-import { FaPlusCircle } from "react-icons/fa";
+import { supabase } from "../../lib/supabase";
+import { FaPlusCircle, FaPlay } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; 
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import YouTube from "react-youtube";
 
 const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 
@@ -16,11 +18,21 @@ const MusicListSection = ({ setPlaylist }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageToken, setNextPageToken] = useState("");
   const [prevPageToken, setPrevPageToken] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Add state for error message
+  const [errorMessage, setErrorMessage] = useState("");
+  const [cachedVideos, setCachedVideos] = useState({});
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [currentVideoId, setCurrentVideoId] = useState(null);
 
   const fetchMusic = async (pageToken = "") => {
+    if (cachedVideos[searchQuery] && !pageToken) {
+      setVideoList(cachedVideos[searchQuery].videos);
+      setNextPageToken(cachedVideos[searchQuery].nextPageToken);
+      setPrevPageToken(cachedVideos[searchQuery].prevPageToken);
+      return;
+    }
+
     setIsLoading(true);
-    setErrorMessage(""); // Reset error message on each request
+    setErrorMessage("");
     try {
       const { data } = await axios.get(
         "https://www.googleapis.com/youtube/v3/search",
@@ -31,7 +43,7 @@ const MusicListSection = ({ setPlaylist }) => {
             q: searchQuery,
             type: "video",
             key: YOUTUBE_API_KEY,
-            pageToken
+            pageToken,
           }
         }
       );
@@ -56,6 +68,15 @@ const MusicListSection = ({ setPlaylist }) => {
         };
       });
 
+      setCachedVideos((prevCache) => ({
+        ...prevCache,
+        [searchQuery]: {
+          videos: videosWithDetails,
+          nextPageToken: data.nextPageToken || "",
+          prevPageToken: data.prevPageToken || ""
+        }
+      }));
+
       setVideoList(videosWithDetails);
       setNextPageToken(data.nextPageToken || "");
       setPrevPageToken(data.prevPageToken || "");
@@ -72,6 +93,10 @@ const MusicListSection = ({ setPlaylist }) => {
     fetchMusic();
   }, [searchQuery]);
 
+  const handleTagClick = (tag) => {
+    setSearchQuery(tag);
+  };
+
   const addToPlaylist = async (video) => {
     const { data: { session } } = await supabase.auth.getSession();
     
@@ -79,15 +104,14 @@ const MusicListSection = ({ setPlaylist }) => {
       toast.error("You must be logged in to add Musics to your playlist.");
       return;
     }
-  
-    // Update the state to reflect the playlist
+
     setPlaylist((prev) => {
       if (!prev.find((v) => v.id.videoId === video.id.videoId)) {
         return [...prev, video];
       }
       return prev;
     });
-  
+
     const { error } = await supabase
       .from("playlist")
       .insert([{
@@ -97,16 +121,14 @@ const MusicListSection = ({ setPlaylist }) => {
         duration: video.contentDetails ? video.contentDetails.duration : "00:00",
         user_id: session.user.id
       }]);
-  
+
     if (error) {
-      // console.error("Error inserting video into Supabase:", error);
       toast.error("Failed to add music to playlist.");
     } else {
-      // console.log("Video added to playlist in Supabase");
       toast.success("Music successfully added to your playlist!");
     }
   };
-  
+
   const formatDuration = (duration) => {
     if (!duration) return "00:00";
     const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -115,6 +137,23 @@ const MusicListSection = ({ setPlaylist }) => {
     const mm = String(m).padStart(2, "0");
     const ss = String(s).padStart(2, "0");
     return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+  };
+
+  const handlePreviewOpen = (videoId) => {
+    setCurrentVideoId(videoId);
+    setIsPreviewOpen(true);
+  };
+
+  const handlePreviewClose = () => {
+    setIsPreviewOpen(false);
+    setCurrentVideoId(null);
+  };
+
+  const opts = {
+    width: "100%",
+    playerVars: {
+      autoplay: 1,
+    },
   };
 
   return (
@@ -126,11 +165,12 @@ const MusicListSection = ({ setPlaylist }) => {
           <motion.input
             type="text"
             placeholder="Search Music..."
-            className="px-4 py-2 w-1/2 rounded-full text-black"
+            className="px-4 py-2 w-full sm:w-1/2 rounded-full text-black"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <TagPopuler onTagClick={handleTagClick} />
 
         {isLoading && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
@@ -144,7 +184,7 @@ const MusicListSection = ({ setPlaylist }) => {
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {videoList.map((video) => (
-            <motion.div key={video.id.videoId} className="bg-gray-800 rounded-lg overflow-hidden shadow-sm transform origin-center">
+            <motion.div key={video.id.videoId} className="bg-gray-800 rounded-lg overflow-hidden shadow-sm transform origin-center hover:scale-105 transition-transform duration-300">
               <div className="relative">
                 <img
                   src={video.snippet.thumbnails.high.url}
@@ -157,12 +197,22 @@ const MusicListSection = ({ setPlaylist }) => {
               </div>
               <div className="p-4 flex flex-col justify-between h-40">
                 <h3 className="text-md font-semibold text-white line-clamp-2">{video.snippet.title}</h3>
-                <button
-                  onClick={() => addToPlaylist(video)}
-                  className="mt-4 flex items-center self-end text-blue-500 hover:text-blue-400 hover:scale-110 transition-all"
-                >
-                  <FaPlusCircle size={20} />
-                </button>
+                <div className="mt-4 flex justify-between items-center">
+                  <button
+                    onClick={() => addToPlaylist(video)}
+                    className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
+                  >
+                    <FaPlusCircle size={20} />
+                    Add Playlist
+                  </button>
+                  <button
+                    onClick={() => handlePreviewOpen(video.id.videoId)}
+                    className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
+                  >
+                    <FaPlay size={20} />
+                    Preview
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -174,7 +224,7 @@ const MusicListSection = ({ setPlaylist }) => {
               onClick={() => fetchMusic(prevPageToken)}
               className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
             >
-              <FaChevronLeft size={20} /> {/* Left chevron icon */}
+              <FaChevronLeft size={20} />
               Previous
             </button>
           )}
@@ -184,11 +234,30 @@ const MusicListSection = ({ setPlaylist }) => {
               className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
             >
               Next
-              <FaChevronRight size={20} /> {/* Right chevron icon */}
+              <FaChevronRight size={20} />
             </button>
           )}
         </div>
       </motion.section>
+
+      {isPreviewOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-gray-900 bg-opacity-80 rounded-lg p-4 max-w-full sm:max-w-2xl w-full shadow-lg">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold text-white">Preview</h3>
+              <button
+                onClick={handlePreviewClose}
+                className="text-red-500 hover:text-red-400"
+              >
+                <FaChevronLeft size={24} />
+              </button>
+            </div>
+            <div className="mt-4 aspect-w-16 aspect-h-9 w-full relative">
+              <YouTube videoId={currentVideoId} opts={opts} />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

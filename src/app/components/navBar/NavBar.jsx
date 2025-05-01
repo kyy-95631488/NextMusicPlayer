@@ -5,6 +5,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import MenuOverlay from "./MenuOverlay";
 import { motion } from "framer-motion";
 import { supabase } from "../../lib/supabase"; // Assuming you have initialized Supabase
+import { ArrowRightOnRectangleIcon, PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 const navLinks = [
   { title: "Home", path: "/" },
@@ -114,17 +115,17 @@ const NavBar = () => {
               <>
                 <li>
                   <Link href="/panel/dashboard">
-                    <button className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
-                      Dashboard
+                    <button className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out flex items-center justify-center">
+                      <UserCircleIcon className="h-6 w-6" />
                     </button>
                   </Link>
                 </li>
                 <li>
                   <button
                     onClick={handleLogout}
-                    className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-semibold py-2 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out"
+                    className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-semibold py-2 px-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out flex items-center justify-center"
                   >
-                    Logout
+                    <PowerIcon className="h-6 w-6" />
                   </button>
                 </li>
                 {/* Display Playlist Count */}
@@ -135,8 +136,8 @@ const NavBar = () => {
             ) : (
               <li>
                 <Link href="auth/login">
-                  <button className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">
-                    Login
+                  <button className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out flex items-center justify-center">
+                    <ArrowRightOnRectangleIcon className="h-6 w-6" />
                   </button>
                 </Link>
               </li>

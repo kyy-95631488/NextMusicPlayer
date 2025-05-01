@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "../../components/footer/Footer";
 import ParticlesComponent from "../../components/particles/particlesreact";
 import { FaCloudUploadAlt, FaSpinner } from "react-icons/fa";
+import { ArrowRightIcon } from '@heroicons/react/20/solid'; 
+import { LockClosedIcon } from '@heroicons/react/20/solid';
 
 const Profile = () => {
   const router = useRouter();
@@ -130,7 +132,7 @@ const Profile = () => {
             <div className="relative h-40 w-40 mx-auto mb-6 overflow-hidden rounded-full border-4 border-[#33353F]">
               {avatarUrl ? (
                 <img
-                  src={`https://cbpzbbjczpxfwmffalbf.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`}
+                  src={`https://qyfvzpugqvdinyzgoubv.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -167,10 +169,10 @@ const Profile = () => {
                 htmlFor="file-upload"
                 className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
               >
-                {uploading ? (
-                  <FaSpinner className="animate-spin inline-block mr-2" />
+                {loading ? (
+                  <FaSpinner className="animate-spin inline-block mr-2 sm:w-6 md:w-8 lg:w-10" />
                 ) : (
-                  <FaCloudUploadAlt className="inline-block mr-2" />
+                  <FaCloudUploadAlt className="inline-block mr-2 sm:w-6 md:w-8 lg:w-10" />
                 )}
                 {uploading ? "Uploading..." : "Upload Image"}
               </label>
@@ -218,9 +220,9 @@ const Profile = () => {
 
                 <button
                   onClick={updateEmail}
-                  className="bg-blue-500 text-white py-2 px-4 rounded w-full mb-4 hover:bg-blue-600"
+                  className="bg-blue-500 text-white py-2 px-4 rounded w-full mb-4 hover:bg-blue-600 flex items-center justify-center"
                 >
-                  Update Email
+                  <ArrowRightIcon className="h-6 w-6 text-white sm:w-6 md:w-8 lg:w-10" />
                 </button>
 
                 <label className="block text-gray-500 mb-1">Password</label>
@@ -241,20 +243,20 @@ const Profile = () => {
 
                 <button
                   onClick={updatePassword}
-                  className="bg-green-500 text-white py-2 px-4 rounded w-full mb-4 hover:bg-green-600"
+                  className="bg-green-500 text-white py-2 px-4 rounded w-full mb-4 hover:bg-green-600 flex items-center justify-center"
                 >
-                  Update Password
+                  <LockClosedIcon className="h-6 w-6 text-white sm:w-6 md:w-8 lg:w-10" />
                 </button>
 
                 <button
                   onClick={updateProfile}
-                  className="bg-blue-500 text-white py-2 px-4 rounded w-full hover:bg-blue-600"
+                  className="bg-blue-500 text-white py-2 px-4 rounded w-full hover:bg-blue-600 flex items-center justify-center"
                   disabled={loading}
                 >
                   {loading ? (
-                    <FaSpinner className="animate-spin inline-block mr-2" />
+                    <FaSpinner className="animate-spin inline-block sm:w-6 md:w-8 lg:w-10" />
                   ) : (
-                    "Update Profile"
+                    <FaCloudUploadAlt className="inline-block sm:w-6 md:w-8 lg:w-10" />
                   )}
                 </button>
               </div>

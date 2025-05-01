@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "../lib/supabase";
+import Image from 'next/image'; 
 import ReactPlayer from "react-player/youtube";
 import { FaPlayCircle, FaPauseCircle, FaStepBackward, FaStepForward, FaVolumeDown, FaVolumeUp, FaPlay, FaTrash } from "react-icons/fa";
 import { BiRepeat } from "react-icons/bi";
@@ -140,10 +141,12 @@ const MusicPlayer = () => {
       key={track.id}
       className="bg-gray-800 text-white p-4 rounded-xl shadow-md w-48 text-center"
     >
-      <img
+      <Image
         src={track.thumbnail}
         alt={track.title}
-        className="w-32 h-32 object-contain rounded-lg mb-4 mx-auto"
+        width={128}
+        height={128}
+        className="object-contain rounded-lg mb-4 mx-auto"
         loading="lazy"
       />
       <h4 className="font-semibold text-sm mb-2 line-clamp-2">{track.title}</h4>
@@ -160,6 +163,8 @@ const MusicPlayer = () => {
       </div>
     </div>
   ));
+
+  PlaylistCard.displayName = "PlaylistCard";
 
   return (
     <main className="flex min-h-screen flex-col bg-[#121212] overflow-x-hidden w-full relative z-0">

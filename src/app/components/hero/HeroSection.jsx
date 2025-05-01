@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link"; 
 import React, { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
@@ -114,12 +115,9 @@ const HeroSection = () => {
               variants={itemVariants}
               className="px-1 py-1 w-full sm:w-fit rounded-full bg-transparent hover:bg-slate-800 text-white mt-3 bg-gradient-to-br from-primary-500 via-secondary-600 to-secondary-500"
             >
-              <a
-                href="/"
-                className="block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2"
-              >
+              <Link href="/" className="block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2">
                 Learn More
-              </a>
+              </Link>
             </motion.button>
           </div>
         </div>

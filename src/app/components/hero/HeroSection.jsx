@@ -82,7 +82,7 @@ const HeroSection = () => {
                 800,
                 "Your Ultimate Music Experience",
                 800,
-                "YouTube, SoundCloud, more",
+                "YouTube Music Player",
                 800,
               ]}
               wrapper="span"
@@ -95,7 +95,7 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl text-wrap lg:mr-20 md:mr-20 md:pr-20"
           >
-            Stream your favorite tracks from YouTube, SoundCloud, and more using our advanced player. Powered by YouTube API, YTDL, Supabase, and Distube.
+            Stream your favorite tracks from YouTube, SoundCloud, and more using our advanced player. Powered by YouTube API, YT-DLP, Supabase.
           </motion.p>
           <div>
             <a

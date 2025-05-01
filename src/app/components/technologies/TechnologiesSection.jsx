@@ -22,18 +22,18 @@ const TechnologiesSection = () => {
     {
       id: 4,
       url: "/icon/ytdl/ytdl-logo.svg",
-      alt: "yt-dl",
+      alt: "yt-dlp",
     },
     {
       id: 5,
       url: "/icon/supabase/supabase-icon.svg",
       alt: "Supabase",
     },
-    {
-      id: 6,
-      url: "/icon/soundcloud/soundcloud-logo.svg",
-      alt: "SoundCloud",
-    },
+    // {
+    //   id: 6,
+    //   url: "/icon/soundcloud/soundcloud-logo.svg",
+    //   alt: "SoundCloud",
+    // },
     {
       id: 7,
       url: "/icon/javascript/JavaScript-logo.png",

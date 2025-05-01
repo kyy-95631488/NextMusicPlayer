@@ -12,13 +12,15 @@ const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 
 const MusicListSection = ({ setPlaylist }) => {
   const [videoList, setVideoList] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("Top Music Phonk");
+  const [searchQuery, setSearchQuery] = useState("Music Tranding 2025");
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageToken, setNextPageToken] = useState("");
   const [prevPageToken, setPrevPageToken] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Add state for error message
 
   const fetchMusic = async (pageToken = "") => {
     setIsLoading(true);
+    setErrorMessage(""); // Reset error message on each request
     try {
       const { data } = await axios.get(
         "https://www.googleapis.com/youtube/v3/search",
@@ -59,6 +61,8 @@ const MusicListSection = ({ setPlaylist }) => {
       setPrevPageToken(data.prevPageToken || "");
     } catch (error) {
       console.error("Failed to fetch YouTube data", error);
+      setErrorMessage("Failed to fetch data from YouTube. Please try again later.");
+      toast.error("Failed to fetch data from YouTube. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -69,10 +73,10 @@ const MusicListSection = ({ setPlaylist }) => {
   }, [searchQuery]);
 
   const addToPlaylist = async (video) => {
-    const { data: { session } } = await supabase.auth.getSession(); // Updated method
+    const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {
-      toast.error("You must be logged in to add videos to your playlist.");
+      toast.error("You must be logged in to add Musics to your playlist.");
       return;
     }
   
@@ -95,12 +99,14 @@ const MusicListSection = ({ setPlaylist }) => {
       }]);
   
     if (error) {
-      console.error("Error inserting video into Supabase:", error);
+      // console.error("Error inserting video into Supabase:", error);
+      toast.error("Failed to add music to playlist.");
     } else {
-      console.log("Video added to playlist in Supabase");
+      // console.log("Video added to playlist in Supabase");
+      toast.success("Music successfully added to your playlist!");
     }
   };
-
+  
   const formatDuration = (duration) => {
     if (!duration) return "00:00";
     const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -132,6 +138,10 @@ const MusicListSection = ({ setPlaylist }) => {
           </div>
         )}
 
+        {errorMessage && (
+          <div className="text-red-500 text-center mt-4">{errorMessage}</div>
+        )}
+
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {videoList.map((video) => (
             <motion.div key={video.id.videoId} className="bg-gray-800 rounded-lg overflow-hidden shadow-sm transform origin-center">
@@ -159,25 +169,25 @@ const MusicListSection = ({ setPlaylist }) => {
         </motion.div>
 
         <div className="flex justify-between mt-6">
-  {prevPageToken && (
-    <button
-      onClick={() => fetchMusic(prevPageToken)}
-      className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
-    >
-      <FaChevronLeft size={20} /> {/* Left chevron icon */}
-      Previous
-    </button>
-  )}
-  {nextPageToken && (
-    <button
-      onClick={() => fetchMusic(nextPageToken)}
-      className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
-    >
-      Next
-      <FaChevronRight size={20} /> {/* Right chevron icon */}
-    </button>
-  )}
-</div>
+          {prevPageToken && (
+            <button
+              onClick={() => fetchMusic(prevPageToken)}
+              className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
+            >
+              <FaChevronLeft size={20} /> {/* Left chevron icon */}
+              Previous
+            </button>
+          )}
+          {nextPageToken && (
+            <button
+              onClick={() => fetchMusic(nextPageToken)}
+              className="text-blue-500 hover:text-blue-400 flex items-center gap-2"
+            >
+              Next
+              <FaChevronRight size={20} /> {/* Right chevron icon */}
+            </button>
+          )}
+        </div>
       </motion.section>
     </>
   );
